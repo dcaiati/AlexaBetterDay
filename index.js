@@ -26,21 +26,11 @@ var handlers = {
             Bucket: process.env.AUDIO_BUCKET
         }
 
-        var alexaObj = this;
-        s3.listObjects(params, function(err, data) {
-            if (err) { 
-                console.log(err, err.stack); // an error occurred
-                alexaObj.response.speak('no s3');
-                alexaObj.emit(':responseReady');
-            } else {
-                var index = Math.floor(Math.random() * Math.floor(process.env.AUDIO_FILE_COUNT)); 
-                var suggestion = data.Contents[index].Key;           // successful response
-                var path = "https://s3.amazonaws.com/" + process.env.AUDIO_BUCKET + "/" + suggestion;
-                var audioOut = '<audio src="' + path + '" />';
-                console.log(audioOut);
-                alexaObj.emit(':tell',audioOut);
-            }
-        });
+        var index = (Math.floor(Math.random() * Math.floor(process.env.AUDIO_FILE_COUNT))) + 1; 
+        var path = "https://s3.amazonaws.com/" + process.env.AUDIO_BUCKET + "/" + index + ".mp3";
+        var audioOut = '<audio src="' + path + '" />';
+        //console.log(audioOut);
+        this.emit(':tell',audioOut);
         
     },
     'SessionEndedRequest' : function() {
